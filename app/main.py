@@ -9,6 +9,11 @@ from fastapi_cache.backends.redis import RedisBackend
 from fastapi_cache.decorator import cache
 
 from redis import asyncio as aioredis
+import logging
+
+
+logging.basicConfig(level=logging.DEBUG)
+
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
@@ -25,7 +30,22 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-from .parsers.tv.api import router
-app.include_router(router)
-from .parsers.eneyida.api import router
-app.include_router(router)
+
+def register_tv():
+    from .parsers.tv.api import router
+    app.include_router(router)
+
+
+def register_eneyida():
+    from .parsers.eneyida.api import router
+    app.include_router(router)
+
+
+def register_uakino():
+    from .parsers.uakino.api import router
+    app.include_router(router)
+
+
+register_tv()
+register_eneyida()
+register_uakino()
